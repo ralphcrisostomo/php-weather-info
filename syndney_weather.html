@@ -1,0 +1,191 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Sydney Weather by Ralf Crisostomo</title>
+<!-- 
+ Created by: Ralf Crisostomo
+ Website: http://ralphcrisostomo.net
+ Email: rrecrisostomo@gmail.com
+ Date: 13.02.2012 
+-->
+<script language="javascript" type="text/javascript">
+	
+	var xmlhttp;
+	
+	function weatherGet() {
+	
+		// Need to use proxy server because of cross-domain issue
+		var url = "proxy.php?url=http://www.google.com/ig/api?weather=Sydney";
+	
+		if (window.XMLHttpRequest){
+		// code for IE7+, Firefox, Chrome, Opera, Safari
+		xmlhttp=new XMLHttpRequest();
+		}
+		else{
+		// code for IE6, IE5
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		
+		if(xmlhttp){
+			
+			xmlhttp.onreadystatechange = weatherReady;
+			xmlhttp.open("GET",url,false);
+			xmlhttp.send();
+			
+		}
+	}
+	
+	function weatherReady() {
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			
+			// Current Condition
+			document.getElementById("current-city").innerHTML = xmlhttp.responseXML.getElementsByTagName("city")[0].getAttribute('data');
+			document.getElementById("current-condition").innerHTML = xmlhttp.responseXML.getElementsByTagName("condition")[0].getAttribute('data');
+			document.getElementById("current-temp_f").innerHTML = xmlhttp.responseXML.getElementsByTagName("temp_f")[0].getAttribute('data') + "°F";
+			document.getElementById("current-temp_c").innerHTML = xmlhttp.responseXML.getElementsByTagName("temp_c")[0].getAttribute('data') + "°C";
+			document.getElementById("current-humidity").innerHTML = xmlhttp.responseXML.getElementsByTagName("humidity")[0].getAttribute('data');
+			document.getElementById("current-icon").src = "http://google.com" + xmlhttp.responseXML.getElementsByTagName("icon")[0].getAttribute('data');
+			document.getElementById("current-windlocation").innerHTML = xmlhttp.responseXML.getElementsByTagName("wind_condition")[0].getAttribute('data');
+			
+			// Weather Forecast
+			var forecast_condition = xmlhttp.responseXML.getElementsByTagName("forecast_conditions"); //an array of elements/records
+			for (i=0; i < forecast_condition.length; i++)
+			{
+			document.getElementById("day-"+i).innerHTML = xmlhttp.responseXML.getElementsByTagName("day_of_week")[i].getAttribute('data');
+			document.getElementById("forecast-icon-"+i).src = "http://google.com" + xmlhttp.responseXML.getElementsByTagName("icon")[i].getAttribute('data');
+			document.getElementById("low-"+i).innerHTML = xmlhttp.responseXML.getElementsByTagName("low")[i].getAttribute('data') + "°";
+			document.getElementById("high-"+i).innerHTML = xmlhttp.responseXML.getElementsByTagName("high")[i].getAttribute('data') + "°";
+			}
+					
+		}else if( xmlhttp.status == 0){
+		
+				document.getElementById("status").innerHTML = "Need to upload on a Server. It uses proxy.php";
+			
+		}
+	}
+	
+	
+</script>
+<style>
+body{
+	font-family:Arial, Helvetica, sans-serif;
+	padding:0;
+	margin:0;
+	color:#000;
+}
+#status{
+	font-size:12px;
+	color:#FF0000;
+	padding-bottom:50px;
+}
+#wrapper{
+	width:320px;
+	height:500px;
+	margin: 0 auto;
+	margin-top:100px;
+}
+#header h1{
+	font-size:24px;
+	line-height:0;
+	padding-bottom:10px;
+	text-transform:uppercase;
+}
+#content h1{
+	font-size:14px;
+	font-weight:normal;
+	clear:both;
+	padding-top:5px;
+}
+#content #container-current-icon{
+	width:55px;
+	height:55px;
+	padding:5px;
+	border: solid 1px #DDD;
+	float:left;
+	margin-left:5px;
+}
+#content #container-current-info{
+	float:left;
+	padding-left:5px;
+}
+#content #container-current-info h1{
+	font-size:30px;
+	font-weight:bold;
+	line-height:0;
+	letter-spacing:-2px;
+	margin-top:15px;
+}
+#content #container-current-info h2{
+	font-size:16px;
+	font-weight:normal;
+	line-height:0.2;
+}
+#content #container-current-info h3{
+	font-size:11px;
+	font-weight:normal;
+	line-height:0;
+	color:#999;
+}
+
+#content .container-forecast{
+	margin-top:-5px;
+	width:80px;
+	float:left;
+}
+
+#content .container-forecast h1{
+	font-size:11px;
+	font-weight:bold;
+	line-height:0;
+	text-align:center;
+	text-transform:uppercase;
+}
+#content #container-forecast-icon{
+	width:55px;
+	height:55px;
+	padding:5px;
+	border: solid 1px #DDD;
+	margin: 0 auto;
+}
+
+#content .container-forecast h2{
+	font-size:14px;
+	line-height:.1;
+	text-align:center;
+}
+</style>
+</head>
+
+<body onLoad="weatherGet()">
+<div id="wrapper">
+	<div id="status"></div>
+	<div id="header">
+    	<h1><span  id="current-city">Current City</span></h1>
+    </div><!-- end of header-->
+
+    <div id="content">
+    	<form action="">
+    		<input type="">
+    		<input type="submit">
+    	</form>
+     	<h1>Current Condition</h1>
+        <div id="container-current-icon"><img id="current-icon" src="" width="55" height="55"></div><!-- end of current-icon -->
+        <div id="container-current-info">
+        	<h1><span id="current-temp_c">C</span> / <span id="current-temp_f">F</span></h1>
+            <h2><span id="current-condition">Current Condition</span></h2>
+            <h3><span id="current-humidity">humidity</span> | <span id="current-windlocation">windlocation</span></h3>
+        </div><!-- end of container-current-info -->
+    	<h1 style="padding-top:15px;">Weather Forecast</h1>
+        <div class="container-forecast"><h1><span id="day-0">Day</span></h1><div id="container-forecast-icon"><img id="forecast-icon-0" src="" width="55" height="55"></div><h2 class="forecast-temp"><span id="low-0">90°</span> | <span  id="high-0">90°</span></h2></div>
+        <div class="container-forecast"><h1><span id="day-1">Day</span></h1><div id="container-forecast-icon"><img id="forecast-icon-1" src="" width="55" height="55"></div><h2 class="forecast-temp"><span id="low-1">90°</span> | <span  id="high-1">90°</span></h2></div>
+        <div class="container-forecast"><h1><span id="day-2">Day</span></h1><div id="container-forecast-icon"><img id="forecast-icon-2" src="" width="55" height="55"></div><h2 class="forecast-temp"><span id="low-2">90°</span> | <span  id="high-2">90°</span></h2></div>
+        <div class="container-forecast"><h1><span id="day-3">Day</span></h1><div id="container-forecast-icon"><img id="forecast-icon-3" src="" width="55" height="55"></div><h2 class="forecast-temp"><span id="low-3">90°</span> | <span  id="high-3">90°</span></h2></div>
+    </div><!-- end of container-->
+    
+    <div id="footer"></div><!-- end of footer -->
+</div><!-- end of wrapper-->
+
+
+</body>
+</html>

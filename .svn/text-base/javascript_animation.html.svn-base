@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Javascript Animation by Ralf Crisostomo</title>
+<!-- 
+ Created by: Ralf Crisostomo
+ Website: http://ralphcrisostomo.net
+ Email: rrecrisostomo@gmail.com
+ Date: 10.02.2012 
+-->
+<script language="javascript"  type="text/javascript">
+	
+	
+	
+	
+		function animate( w ){
+			var box = document.getElementById("box");
+			var width  	= parseInt( box.style.width );
+			var change 	= w - width;
+			var total	= width + Math.ceil((change/2));
+			
+			box.style.width	= total + 'px';
+			
+			
+			function loop() {
+				
+				animate(w);
+			
+			}
+			if(change == 0) {
+				
+				clearTimeout(timer);
+				return;
+			}
+			
+			timer = setTimeout( loop , 80 );
+		}
+</script>
+<style>
+*{
+	margin:0;
+	padding:0;
+	text-align:center;
+}
+#wrapper{
+	margin:0 auto;
+	width:960px;	
+	
+}
+#box-container{
+	margin-top:50px;
+	margin-bottom:50px;
+	border:1px solid #000;
+}
+#box{
+	background:#FF0000;
+}
+</style>
+</head>
+
+<body>
+<div id="wrapper">
+	
+	<div id="box-container"><div id="box" style="width:0px;height:200px;"></div></div>
+    <a href="javascript:void(0)" onclick="animate(960)">Animate</a>
+    <a href="javascript:void(0)" onclick="document.getElementById('box').style.width='0px'">Reset</a>
+
+</div>
+</body>
+</html>
